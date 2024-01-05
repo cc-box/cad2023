@@ -142,8 +142,61 @@ img.add_border {
           </div>
           
         </header>
-    <div id="tipue_search_content">step4 << <a href='step4.html'>Previous</a> <a href='step6.html'>Next</a> >> step6<br /><h1>step5</h1>
-<br />step4 << <a href='step4.html'>Previous</a> <a href='step6.html'>Next</a> >> step6</div>
+    <div id="tipue_search_content">座位表程式 << <a href='座位表程式.html'>Previous</a> <a href='程式示範網頁.html'>Next</a> >> 程式示範網頁<br /><h1>程式碼</h1>
+<pre class="brush:py;auto-links:false;toolbar:false" contenteditable="false"># Brython code starts
+from browser import document, html
+
+# get output html location
+brython_div = document["brython_div1"]
+brython_div &lt;= html.P(id="output_table")
+
+# Replace this line with the actual file content
+file_content = open("https://mde.tw/cadnote/downloads/2a_w12_seat.txt").read()
+
+# Create a dictionary to store student numbers and seat numbers
+seat_map = {}
+
+# Process each line of the file content
+for line in file_content.splitlines():
+    # Split each line using tabs
+    elements = line.split("\t")
+
+    # If the line contains seat information
+    if len(elements) == 2 and "(" in elements[1]:
+        # Extract student number and seat information
+        stud_num = elements[0].strip()
+        seat_info = elements[1].strip()
+
+        # Add student number and seat information to the dictionary
+        seat_map[stud_num] = seat_info
+
+# Find the maximum row and column values
+max_row = max(int(seat_info[1]) for seat_info in seat_map.values())
+max_col = max(int(seat_info[3]) for seat_info in seat_map.values())
+
+# Initialize a 2D list to represent the seating arrangement
+seating_arrangement = [["缺席👎"] * max_col for _ in range(max_row)]
+
+# Populate the seating arrangement with student information
+for stud_num, seat_info in seat_map.items():
+    row = int(seat_info[1]) - 1
+    col = int(seat_info[3]) - 1
+    seating_arrangement[row][col] = f"座號: {seat_info}, 學號: {stud_num}"
+
+# Display the result in the HTML document
+result_html = "&lt;table&gt;"
+for row in seating_arrangement:
+    result_html += "&lt;tr&gt;"
+    for cell_content in row:
+        result_html += f"&lt;td&gt;{cell_content}&lt;/td&gt;"
+    result_html += "&lt;/tr&gt;"
+result_html += "&lt;/table&gt;"
+
+# Update the HTML content with the result
+document["output_table"].html = result_html
+# Brython code ends
+</pre>
+<br />座位表程式 << <a href='座位表程式.html'>Previous</a> <a href='程式示範網頁.html'>Next</a> >> 程式示範網頁</div>
         
     <!-- footer -->
       <div class="container">

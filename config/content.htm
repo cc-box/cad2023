@@ -184,7 +184,136 @@ doc["add1to100"].bind('click', add)
 <p><!-- 程式執行 ouput 區 --></p>
 <div style="width: 100%; height: 100%;"><textarea autocomplete="off" id="kw_console2"></textarea></div>
 <p><!-- Brython 程式執行的結果, 都以 brython_div1 作為切入位置 --></p>
-<h1>hw</h1>
+<h1>座位表程式</h1>
+<h2>程式碼</h2>
+<pre class="brush:py;auto-links:false;toolbar:false" contenteditable="false"># Brython code starts
+from browser import document, html
+
+# get output html location
+brython_div = document["brython_div1"]
+brython_div &lt;= html.P(id="output_table")
+
+# Replace this line with the actual file content
+file_content = open("https://mde.tw/cadnote/downloads/2a_w12_seat.txt").read()
+
+# Create a dictionary to store student numbers and seat numbers
+seat_map = {}
+
+# Process each line of the file content
+for line in file_content.splitlines():
+    # Split each line using tabs
+    elements = line.split("\t")
+
+    # If the line contains seat information
+    if len(elements) == 2 and "(" in elements[1]:
+        # Extract student number and seat information
+        stud_num = elements[0].strip()
+        seat_info = elements[1].strip()
+
+        # Add student number and seat information to the dictionary
+        seat_map[stud_num] = seat_info
+
+# Find the maximum row and column values
+max_row = max(int(seat_info[1]) for seat_info in seat_map.values())
+max_col = max(int(seat_info[3]) for seat_info in seat_map.values())
+
+# Initialize a 2D list to represent the seating arrangement
+seating_arrangement = [["缺席👎"] * max_col for _ in range(max_row)]
+
+# Populate the seating arrangement with student information
+for stud_num, seat_info in seat_map.items():
+    row = int(seat_info[1]) - 1
+    col = int(seat_info[3]) - 1
+    seating_arrangement[row][col] = f"座號: {seat_info}, 學號: {stud_num}"
+
+# Display the result in the HTML document
+result_html = "&lt;table&gt;"
+for row in seating_arrangement:
+    result_html += "&lt;tr&gt;"
+    for cell_content in row:
+        result_html += f"&lt;td&gt;{cell_content}&lt;/td&gt;"
+    result_html += "&lt;/tr&gt;"
+result_html += "&lt;/table&gt;"
+
+# Update the HTML content with the result
+document["output_table"].html = result_html
+# Brython code ends
+</pre>
+<h2>程式示範網頁</h2>
+<p><a href="https://41123112.github.io/cad2023_ag4/content/Brython.html?src=https://gist.githubusercontent.com/cc-box/b073eb0b45b07d1eeac01de8a7d86c4a/raw/d74772bd1f448f5be45df87ab723f31b78ee2624/gistfile1.txt">連結</a></p>
+<h2>座位表成果</h2>
+<div id="brython_div1">
+<table>
+<tbody>
+<tr>
+<td>座號: (1,1), 學號: 41123123</td>
+<td>座號: (1,2), 學號: 41123119</td>
+<td>座號: (1,3), 學號: 41123105</td>
+<td>座號: (1,4), 學號: 41123152</td>
+<td>座號: (1,5), 學號: 41123120</td>
+<td>座號: (1,6), 學號: 41123108</td>
+<td>座號: (1,7), 學號: 41123145</td>
+<td>座號: (1,8), 學號: 41123137</td>
+<td>座號: (1,9), 學號: 41123130</td>
+</tr>
+<tr>
+<td>座號: (2,1), 學號: 41123140</td>
+<td>座號: (2,2), 學號: 41123150</td>
+<td>座號: (2,3), 學號: 41123124</td>
+<td>缺席👎</td>
+<td>座號: (2,5), 學號: 41136123</td>
+<td>座號: (2,6), 學號: 41123148</td>
+<td>座號: (2,7), 學號: 41123116</td>
+<td>座號: (2,8), 學號: 41123146</td>
+<td>缺席👎</td>
+</tr>
+<tr>
+<td>座號: (3,1), 學號: 41123139</td>
+<td>座號: (3,2), 學號: 41123131</td>
+<td>座號: (3,3), 學號: 41123135</td>
+<td>座號: (3,4), 學號: 41123149</td>
+<td>座號: (3,5), 學號: 41123122</td>
+<td>座號: (3,6), 學號: 41123134</td>
+<td>座號: (3,7), 學號: 41123107</td>
+<td>座號: (3,8), 學號: 41123101</td>
+<td>座號: (3,9), 學號: 41123102</td>
+</tr>
+<tr>
+<td>座號: (4,1), 學號: 41123128</td>
+<td>座號: (4,2), 學號: 41123117</td>
+<td>座號: (4,3), 學號: 41123114</td>
+<td>座號: (4,4), 學號: 41123126</td>
+<td>座號: (4,5), 學號: 41123115</td>
+<td>座號: (4,6), 學號: 41123111</td>
+<td>缺席👎</td>
+<td>座號: (4,8), 學號: 41123112</td>
+<td>缺席👎</td>
+</tr>
+<tr>
+<td>座號: (5,1), 學號: 41123144</td>
+<td>座號: (5,2), 學號: 41123141</td>
+<td>座號: (5,3), 學號: 41123143</td>
+<td>座號: (5,4), 學號: 41123129</td>
+<td>缺席👎</td>
+<td>缺席👎</td>
+<td>座號: (5,7), 學號: 41023134</td>
+<td>座號: (5,8), 學號: 41023156</td>
+<td>座號: (5,9), 學號: 41023155</td>
+</tr>
+<tr>
+<td>座號: (6,1), 學號: 40923118</td>
+<td>座號: (6,2), 學號: 41123154</td>
+<td>座號: (6,3), 學號: 41123153</td>
+<td>缺席👎</td>
+<td>座號: (6,5), 學號: 41023245</td>
+<td>座號: (6,6), 學號: 41023246</td>
+<td>缺席👎</td>
+<td>座號: (6,8), 學號: 40923127</td>
+<td>座號: (6,9), 學號: 40923213</td>
+</tr>
+</tbody>
+</table>
+</div><h1>hw</h1>
 <h2>繪圖檔案</h2>
 <p><a href="https://nfuedu-my.sharepoint.com/:u:/g/personal/41123117_nfu_edu_tw/EXXJT0hK91tBjhdecEIo5WoBxyqO-8Pm6M3BiWMmjrj2wQ?e=P9rb01">全部零件</a></p>
 <p>繪圖過程</p>
